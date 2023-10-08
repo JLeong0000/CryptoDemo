@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Icon } from "@iconify/react";
-import { motion } from "framer-motion";
+import { AnimatePresence, easeIn, easeOut, motion } from "framer-motion";
+
+const parent = { start: { x: 210 }, end: { x: 0, transition: { ease: easeOut, staggerChildren: 0.2 } }, exit: { x: 210 } };
+const navLink = { start: { x: 20, opacity: 0, filter: "blur(5px)" }, end: { x: 0, opacity: 1, filter: "blur(0px)", transition: { ease: easeOut } } };
 
 const Navbar = ({ scrollToElement }) => {
 	const [isOpen, setOpen] = useState(false);
@@ -9,7 +12,7 @@ const Navbar = ({ scrollToElement }) => {
 		<motion.nav
 			className="bg-gradient-to-b from-[#0a0818a7] to-transparent sticky top-0 z-50"
 			initial={{ opacity: 0 }}
-			animate={{ opacity: 1, transition: { duration: 0.5, delay: 2.5 } }}
+			animate={{ opacity: 1, transition: { duration: 0.8, delay: 1.5, ease: easeIn } }}
 		>
 			<div className="max-w-screen-2xl font-kanit text-white text-lg mx-auto flex justify-between px-4 py-5">
 				<img
@@ -62,71 +65,86 @@ const Navbar = ({ scrollToElement }) => {
 						/>
 					</a>
 
+					{/* Nav Burger */}
 					<div className="block md:hidden">
-						{isOpen ? (
-							<div className="text-black bg-white h-screen absolute top-0 right-0 w-52 flex items-start justify-end">
-								<div className="uppercase flex flex-col justify-end items-end text-right m-5 space-y-10">
-									<button onClick={() => setOpen(!isOpen)}>
-										<Icon
-											icon="ph:x-bold"
-											width={30}
-										/>
-									</button>
-									<a
-										onClick={() => {
-											scrollToElement("home");
-											setOpen(!isOpen);
-										}}
-										className="cursor-pointer text-2xl"
-									>
-										home
-									</a>
-									<a
-										onClick={() => {
-											scrollToElement("market");
-											setOpen(!isOpen);
-										}}
-										className="cursor-pointer text-2xl"
-									>
-										market
-									</a>
-									<a
-										onClick={() => {
-											scrollToElement("benefits");
-											setOpen(!isOpen);
-										}}
-										className="cursor-pointer text-2xl"
-									>
-										benefits
-									</a>
-									<a
-										onClick={() => {
-											scrollToElement("team");
-											setOpen(!isOpen);
-										}}
-										className="cursor-pointer text-2xl"
-									>
-										team
-									</a>
-									<a
-										onClick={() => {
-											scrollToElement("faqs");
-											setOpen(!isOpen);
-										}}
-										className="cursor-pointer text-2xl"
-									>
-										faqs
-									</a>
-								</div>
-							</div>
-						) : (
-							<Icon
-								icon="iconamoon:menu-burger-horizontal"
-								width={30}
-								onClick={() => setOpen(!isOpen)}
-								className="cursor-pointer"
-							/>
-						)}
+						<AnimatePresence>
+							{isOpen ? (
+								<motion.div
+									className="text-black bg-white h-screen absolute top-0 right-0 w-52 flex items-start justify-end"
+									key="modal"
+									variants={parent}
+									initial="start"
+									animate="end"
+									exit="exit"
+								>
+									<div className="uppercase flex flex-col justify-end items-end text-right m-5 space-y-10">
+										<button onClick={() => setOpen(!isOpen)}>
+											<Icon
+												icon="ph:x-bold"
+												width={30}
+											/>
+										</button>
+										<motion.a
+											onClick={() => {
+												scrollToElement("home");
+												setOpen(!isOpen);
+											}}
+											className="cursor-pointer text-2xl"
+											variants={navLink}
+										>
+											home
+										</motion.a>
+										<motion.a
+											onClick={() => {
+												scrollToElement("market");
+												setOpen(!isOpen);
+											}}
+											className="cursor-pointer text-2xl"
+											variants={navLink}
+										>
+											market
+										</motion.a>
+										<motion.a
+											onClick={() => {
+												scrollToElement("benefits");
+												setOpen(!isOpen);
+											}}
+											className="cursor-pointer text-2xl"
+											variants={navLink}
+										>
+											benefits
+										</motion.a>
+										<motion.a
+											onClick={() => {
+												scrollToElement("team");
+												setOpen(!isOpen);
+											}}
+											className="cursor-pointer text-2xl"
+											variants={navLink}
+										>
+											team
+										</motion.a>
+										<motion.a
+											onClick={() => {
+												scrollToElement("faqs");
+												setOpen(!isOpen);
+											}}
+											className="cursor-pointer text-2xl"
+											variants={navLink}
+										>
+											faqs
+										</motion.a>
+									</div>
+								</motion.div>
+							) : (
+								<Icon
+									icon="iconamoon:menu-burger-horizontal"
+									width={30}
+									onClick={() => setOpen(!isOpen)}
+									className="cursor-pointer"
+								/>
+							)}
+						</AnimatePresence>
 					</div>
 				</div>
 			</div>

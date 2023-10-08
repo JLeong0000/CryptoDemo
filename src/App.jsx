@@ -1,11 +1,11 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import Faqs from "./components/Faqs";
+import { useRef, useState } from "react";
+import { easeOut, motion, useScroll, useTransform } from "framer-motion";
+import Faq from "./components/Faq";
 import Footer from "./components/Footer";
 import MarketTable from "./components/MarketTable";
 import Navbar from "./components/Navbar";
 import Team from "./components/Team";
 import Usp from "./components/Usp";
-import { useRef } from "react";
 
 const App = () => {
 	const scrollToElement = elementId => {
@@ -51,15 +51,26 @@ const App = () => {
 		],
 	];
 
-	const faqs = [
-		"What is cryptocurrency?",
-		"What is a cryptocurrency wallet?",
-		"How can I protect myself from cryptocurrency scams and fraud?",
-		"What is the volatility of cryptocurrencies?",
-		"Can I use cryptocurrencies for everyday purchases?",
-		"What is the future of cryptocurrencies?",
-		"What are the environmental concerns related to cryptocurrency mining?",
-	];
+	const [faqs, setFaqs] = useState([
+		{ question: "What is cryptocurrency?", isOpen: false },
+		{ question: "What is a cryptocurrency wallet?", isOpen: false },
+		{ question: "How can I protect myself from cryptocurrency scams and fraud?", isOpen: false },
+		{ question: "What is the volatility of cryptocurrencies?", isOpen: false },
+		{ question: "Can I use cryptocurrencies for everyday purchases?", IsOpen: false },
+		{ question: "What is the future of cryptocurrencies?", isOpen: false },
+		{ question: "What are the environmental concerns related to cryptocurrency mining?", isOpen: false },
+	]);
+	const toggleFaq = index => {
+		const updatedFaqs = faqs.map((faq, i) => {
+			if (i === index) {
+				return { ...faq, isOpen: !faq.isOpen };
+			} else {
+				return { ...faq, isOpen: false };
+			}
+		});
+
+		setFaqs(updatedFaqs);
+	};
 
 	const ref = useRef(null);
 	const { scrollYProgress } = useScroll({
@@ -84,7 +95,7 @@ const App = () => {
 							<motion.h1
 								className="text-5xl text-center z-50 sm:text-6xl"
 								initial={{ opacity: 0, scale: 0.95 }}
-								animate={{ opacity: 1, scale: 1, transition: { duration: 2 } }}
+								animate={{ opacity: 1, scale: 1, transition: { duration: 1.5 } }}
 							>
 								Revolutionize your cryptocurrency journey
 							</motion.h1>
@@ -92,7 +103,7 @@ const App = () => {
 								<motion.p
 									className="text-xl text-center"
 									initial={{ y: 50 }}
-									animate={{ y: 0, transition: { duration: 0.5, delay: 2 } }}
+									animate={{ y: 0, transition: { duration: 0.5, delay: 1.5 } }}
 								>
 									Real-time tracking and seamless trading to empower your financial success
 								</motion.p>
@@ -102,7 +113,7 @@ const App = () => {
 							<motion.button
 								className="bg-violet-600 rounded-sm px-12 py-3 mb-4 text-xl hover:bg-violet-700 active:bg-violet-800"
 								initial={{ y: 70, opacity: 0 }}
-								animate={{ y: 0, opacity: 1, transition: { duration: 0.5, delay: 2.5 } }}
+								animate={{ y: 0, opacity: 1, transition: { duration: 0.5, delay: 1.8 } }}
 							>
 								Trade with us
 							</motion.button>
@@ -110,7 +121,7 @@ const App = () => {
 								onClick={() => scrollToElement("benefits")}
 								className="bg-zinc-500 rounded-sm px-12 py-3 mb-4 text-xl hover:bg-zinc-600 active:bg-zinc-700"
 								initial={{ y: 70, opacity: 0 }}
-								animate={{ y: 0, opacity: 1, transition: { duration: 0.5, delay: 2.5 } }}
+								animate={{ y: 0, opacity: 1, transition: { duration: 0.5, delay: 1.8 } }}
 							>
 								Find out more
 							</motion.button>
@@ -123,7 +134,7 @@ const App = () => {
 					id="market"
 					className="font-kanit text-white mt-[100vh] mx-4 py-1"
 				>
-					<h1 className="font-eth text-4xl tracking-wide uppercase my-8">Market Updates</h1>
+					<h1 className="font-eth text-3xl tracking-wide uppercase my-8 md:text-4xl">Market Updates</h1>
 					<MarketTable />
 				</section>
 
@@ -133,7 +144,7 @@ const App = () => {
 					ref={ref}
 					className="font-kanit text-white text-center my-32 space-y-10"
 				>
-					<h1 className="font-eth text-4xl tracking-wide uppercase">What we offer you</h1>
+					<h1 className="font-eth text-3xl tracking-wide uppercase mx-14 sm:mx-0 md:text-4xl">What we offer you</h1>
 					<div className="flex items-center justify-center overflow-hidden object-scale-down">
 						<motion.img
 							src="../../bitcoin.png"
@@ -163,23 +174,26 @@ const App = () => {
 					id="team"
 					className="font-kanit text-white text-center mx-4 py-16 my-32 space-y-4 md:space-y-10"
 				>
-					<h1 className="font-eth text-4xl tracking-wide uppercase">OUR TEAM</h1>
+					<h1 className="font-eth text-3xl tracking-wide uppercase md:text-4xl">OUR TEAM</h1>
 					<Team team={team} />
 				</section>
 
-				{/* Connect with us */}
+				{/* FAQs */}
 				<section
 					id="faqs"
 					className="font-kanit text-white mx-4 py-8 my-32 space-y-4 md:space-y-10"
 				>
 					<div className="grid grid-cols-1 lg:grid-cols-3">
-						<h1 className="font-eth text-4xl tracking-wide uppercase me-4 mb-8 text-start lg:text-end">Frequently Asked Questions</h1>
+						<h1 className="font-eth text-3xl tracking-wide uppercase me-4 mb-8 text-start md:text-4xl lg:text-end">Frequently Asked Questions</h1>
 						<div className="col-span-2 space-y-2">
 							{faqs.map((faq, index) => {
 								return (
-									<div key={index}>
-										<Faqs faq={faq} />
-									</div>
+									<Faq
+										key={index}
+										faq={faq.question}
+										isOpen={faq.isOpen}
+										toggleOpen={() => toggleFaq(index)}
+									/>
 								);
 							})}
 						</div>
