@@ -1,38 +1,28 @@
 import { Icon } from "@iconify/react";
 import { easeOut, motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import ReactPaginate from "react-paginate";
+import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getData } from "../api/getData";
 
 const parent = { start: { opacity: 0 }, end: { opacity: 1 } };
 const child = { start: { opacity: 0, scale: 0.8 }, end: { opacity: 1, scale: 1, transition: { ease: easeOut, duration: 0.7 } } };
 
 const MarketTable = () => {
-	const [data, setData] = useState([]);
-	const [loading, setLoading] = useState(true);
-
-	useEffect(() => {
-		// Replace 'https://api.example.com/data' with your API endpoint.
-		fetch("https://api.coincap.io/v2/assets?limit=35")
-			.then(response => response.json())
-			.then(json => {
-				setData(json.data); // Store the parsed JSON data in the 'data' state
-				setLoading(false); // Set loading to false once data is fetched
-			})
-			.catch(error => {
-				console.error("Error fetching data:", error);
-				setLoading(false);
-			});
-	}, []);
-
+	const { isLoading, isError, error, data: crypto } = useQuery({ queryKey: ["crypto"], queryFn: getData });
+	if (isError) {
+		console.log(error);
+	}
 	const [currentPage, setCurrentPage] = useState(1);
 	const startIndex = (currentPage - 1) * 7;
 	const endIndex = startIndex + 7;
-	const pageData = data.slice(startIndex, endIndex);
+	const pageData = crypto?.data.slice(startIndex, endIndex);
 
 	return (
 		<div className="font-kanit uppercase">
-			{loading ? (
-				<p>Loading...</p>
+			{isLoading ? (
+				<p>isLoading...</p>
+			) : isError ? (
+				<p>There was an error loading</p>
 			) : (
 				<div>
 					{/* Table */}
@@ -67,7 +57,6 @@ const MarketTable = () => {
 													alt=""
 													className="w-8 pe-2"
 												/>
-												{/* <Icon icon={`cryptocurrency-color:${coin.symbol.toLowerCase()}`} /> */}
 												{coin.symbol}
 											</td>
 											{Number(coin.changePercent24Hr) >= 0 ? (
