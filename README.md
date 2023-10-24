@@ -1,8 +1,14 @@
-# React + Vite
+# Crypto Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Demo website made for my portfolio.
 
-Currently, two official plugins are available:
+Displaying live market data for cryptocurrency.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+API from https://docs.coincap.io/
+
+
+
+## Technologies
+
+Made using React, Vite, Tailwind CSS and Framer Motion.
+
